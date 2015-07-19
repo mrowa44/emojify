@@ -3,27 +3,45 @@
 # Regex for emoji names like :sparkling_heart:
 regex=':([A-Za-z1-9_])+:'
 
+to_emoji () {
+  local word=$1
+  echo $word
+}
+
+emojify () {
+  local line=$1
+  local emojified=$'\b'
+
+  # If line contains emoji, turn line into array
+  # Else just add whole line to emojified
+  if [[ $line =~ $regex ]]; then
+    IFS=' '; read -a line_arr <<< $line
+
+    # And check each word against regex
+    # If it doesn't match just add word to emojified
+    for word in "${line_arr[@]}"; do
+      if [[ $word =~ $regex ]]; then
+        emojified+=$(to_emoji $word)
+      else
+        emojified+=$word
+      fi
+      emojified+=' '
+    done
+
+  else
+    emojified+=$line
+  fi
+
+  echo $emojified
+}
+
+# Accept input from $* or from the pipeline
 if test "$*" != ''; then
-  data="$*"
+  emojify $*
 else
   while IFS=''; read -r line; do
-    if [[ $line =~ $regex ]]; then
-      IFS=' '; read -a line_arr <<< "$line"
-
-      for word in "${line_arr[@]}"; do
-        if [[ $word =~ $regex ]]; then
-          data+='~EMOJI~'
-        else
-          data+=$word
-        fi
-        data+=' '
-      done
-
-    else
-      data+=$line
-    fi
+    data+=$(emojify $line)
     data+=$'\n'
   done
+  echo $data | sed '1d; $d; s/^ *//'
 fi
-
-echo $data
