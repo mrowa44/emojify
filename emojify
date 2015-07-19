@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Regex for emoji names like :sparkling_heart:
+regex=':([A-Za-z1-9_])+:'
+
+if test "$*" != ''; then
+  data="$*"
+else
+  while IFS=''; read -r line; do
+    if [[ $line =~ $regex ]]; then
+      IFS=' '; read -a line_arr <<< "$line"
+
+      for word in "${line_arr[@]}"; do
+        if [[ $word =~ $regex ]]; then
+          data+='~EMOJI~'
+        else
+          data+=$word
+        fi
+        data+=' '
+      done
+
+    else
+      data+=$line
+    fi
+    data+=$'\n'
+  done
+fi
+
+echo $data
