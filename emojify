@@ -8,7 +8,6 @@ to_emoji () {
   # Get emoji from 'hash'
   for (( x=0; x < ${#keys[@]}; x++ )); do
     if [ $key == "${keys[$x]}" ]; then
-      local value="${values[$x]}"
       echo -n "${values[$x]}"
     fi
   done
@@ -919,11 +918,16 @@ keys[869]=':small_blue_diamond:'; values[869]='🔹'
 
 # Accept input from $* or from the pipeline
 if test "$*" != ''; then
-  emojify $*
+  IFS=' '; read -a words_arr <<< $*
+  for word in "${words_arr[@]}"; do
+    data+=$(emojify $word)
+    data+=' '
+  done
+  echo $data
 else
   while IFS=''; read -r line; do
     data+=$(emojify $line)
     data+=$'\n'
   done
-  echo $data | sed  '$ d'
+  echo $data | sed '${/^$/d;}'
 fi
