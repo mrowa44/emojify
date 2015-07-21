@@ -9,8 +9,12 @@ to_emoji () {
   for (( x=0; x < ${#keys[@]}; x++ )); do
     if [ $key == "${keys[$x]}" ]; then
       echo -n "${values[$x]}"
+      local value="${values[$x]}"
     fi
   done
+  if [ -z $value ]; then
+    echo $key
+  fi
 }
 
 emojify () {
