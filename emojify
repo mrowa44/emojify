@@ -19,12 +19,12 @@ to_emoji () {
 
 emojify () {
   local line=$1
-  local emojified=$'\b'
 
   # If line contains emoji, turn line into array
   # Else just add whole line to emojified
   if [[ $line =~ $regex ]]; then
     IFS=' '; read -a line_arr <<< $line
+    local emojified=$'\t'
 
     # And check each word against regex
     # If it doesn't match just add word to emojified
@@ -38,10 +38,10 @@ emojify () {
     done
 
   else
-    emojified+=$line
+    local emojified=$line
   fi
 
-  echo $emojified
+  echo $emojified | xargs
 }
 
 # Emoji in something like a hash or associative array
