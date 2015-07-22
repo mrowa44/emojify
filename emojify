@@ -19,12 +19,12 @@ to_emoji () {
 
 emojify () {
   local line=$1
+  local emojified=$'\t'
 
   # If line contains emoji, turn line into array
   # Else just add whole line to emojified
   if [[ $line =~ $regex ]]; then
     IFS=' '; read -a line_arr <<< $line
-    local emojified=$'\t'
 
     # And check each word against regex
     # If it doesn't match just add word to emojified
@@ -41,7 +41,7 @@ emojify () {
     local emojified=$line
   fi
 
-  echo $emojified | xargs
+  echo $emojified | sed -e 's/^[[:space:]]*//'
 }
 
 # Emoji in something like a hash or associative array
@@ -929,9 +929,7 @@ if test "$*" != ''; then
   done
   echo $data
 else
-  while IFS=''; read -r line; do
-    data+=$(emojify $line)
-    data+=$'\n'
+  while IFS=''; read -r line || [ -n "$line" ]; do
+    echo $(emojify $line)
   done
-  echo $data | sed '${/^$/d;}'
 fi
