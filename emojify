@@ -19,7 +19,7 @@ to_emoji () {
 
 emojify () {
   local line=$1
-  local emojified=$'\t'
+  local emojified=$'\b'
 
   # If line contains emoji, turn line into array
   # Else just add whole line to emojified
@@ -41,7 +41,7 @@ emojify () {
     local emojified=$line
   fi
 
-  echo $emojified | sed -e 's/^[[:space:]]*//'
+  echo $emojified | tr -d '\b'
 }
 
 # Emoji in something like a hash or associative array
