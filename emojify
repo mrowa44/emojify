@@ -1,11 +1,33 @@
 #!/usr/bin/env bash
+#
+# emojify
+# https://github.com/mrowa44/emojify
+#
+# Substitutes emoji aliases (like :sparkling_heart:) to emoji raw characters.
+#
+# emojify takes input from argument list or from the pipeline.
+#
+#
+# For instance, to emojify git log run:
+#   $ git log --oneline --color | emojify | less
+# (you need to specify color option if you want colors)
+#
+# To have an alias that does that for you, add something like:
+#   log = ! git log --oneline --color | emojify | less
+# to your .gitconfig
+#
+# Or, you could do something silly like:
+#   $ emojify "Hey, I just :raising_hand: you, and this is :scream: , but
+#     here's my :calling: , so :telephone_receiver: me, maybe?"
+
 
 # Regex for emoji names like :sparkling_heart:
 regex=':([A-Za-z1-9_])+:'
 
+# Gets emoji from 'hash'
+# Returns raw emoji character or word
 to_emoji () {
   local key=$1
-  # Get emoji from 'hash'
   for (( x=0; x < ${#keys[@]}; x++ )); do
     if [ $key == "${keys[$x]}" ]; then
       echo -n "${values[$x]}"
@@ -17,17 +39,18 @@ to_emoji () {
   fi
 }
 
+# If line contains emoji, turn line into array,
+# else just add whole line to emojified.
+# Then check each word against regex,
+# if it doesn't match just add word to emojified.
+# Returns emojified line
 emojify () {
   local line=$1
   local emojified=$'\b'
 
-  # If line contains emoji, turn line into array
-  # Else just add whole line to emojified
   if [[ $line =~ $regex ]]; then
     IFS=' '; read -a line_arr <<< $line
 
-    # And check each word against regex
-    # If it doesn't match just add word to emojified
     for word in "${line_arr[@]}"; do
       if [[ $word =~ $regex ]]; then
         emojified+=$(to_emoji $word)
@@ -920,14 +943,27 @@ keys[867]=':large_blue_diamond:'; values[867]='🔷'
 keys[868]=':small_orange_diamond:'; values[868]='🔸'
 keys[869]=':small_blue_diamond:'; values[869]='🔹'
 
+help () {
+  cat <<EOF
+  emojify - emoji on the command line 😱
+
+  USAGE: emojify [-h|--help] TEXT
+EOF
+}
+
 # Accept input from $* or from the pipeline
 if test "$*" != ''; then
-  IFS=' '; read -a words_arr <<< $*
-  for word in "${words_arr[@]}"; do
-    data+=$(emojify $word)
-    data+=' '
-  done
-  echo $data
+  if [ "$1" == '-h' ] || [ "$1" == '--help' ]; then
+    help
+    exit 0
+  else
+    IFS=' '; read -a words_arr <<< $*
+    for word in "${words_arr[@]}"; do
+      data+=$(emojify $word)
+      data+=' '
+    done
+    echo $data
+  fi
 else
   while IFS=''; read -r line || [ -n "$line" ]; do
     echo $(emojify $line)
