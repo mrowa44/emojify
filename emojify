@@ -32,6 +32,7 @@ to_emoji () {
     if [ $key == "${keys[$x]}" ]; then
       echo -n "${values[$x]}"
       local value="${values[$x]}"
+      break
     fi
   done
   if [ -z $value ]; then
