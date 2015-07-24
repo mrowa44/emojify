@@ -49,7 +49,7 @@ emojify () {
   local emojified=$'\b'
 
   if [[ $line =~ $regex ]]; then
-    IFS=' '; read -a line_arr <<< $line
+    IFS=' ' read -a line_arr <<< $line
 
     for word in "${line_arr[@]}"; do
       if [[ $word =~ $regex ]]; then
