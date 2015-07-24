@@ -18,6 +18,11 @@ Installation
 [emojify](emojify) is a shell script, so put it somewhere and make sure it's
 added to your `$PATH`.
 
+Here's a one-liner:
+```sh
+$ sudo sh -c "curl https://raw.githubusercontent.com/mrowa44/emojify/master/emojify -o /usr/local/bin/emojify && chmod +x /usr/local/bin/emojify"
+```
+
 
 Usage
 -----
