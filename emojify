@@ -22,7 +22,7 @@
 
 
 # Regex for emoji names like :sparkling_heart:
-regex=':([A-Za-z1-9_])+:'
+regex=':([A-Za-z0-9_])+:'
 
 # Gets emoji from 'hash'
 # Returns raw emoji character or word
