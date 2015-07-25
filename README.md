@@ -23,6 +23,14 @@ Here's a one-liner:
 $ sudo sh -c "curl https://raw.githubusercontent.com/mrowa44/emojify/master/emojify -o /usr/local/bin/emojify && chmod +x /usr/local/bin/emojify"
 ```
 
+This repository is also an oh-my-zsh compatible ZSH plugin, so depending on which ZSH framework you're using, you can install it by:
+* [antigen](https://github.com/zsh-users/antigen) users: Add `antigen bundle mrowa44/emojify` where you're loading your other plugins.
+* [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) users:
+    1. Change to your custom plugins directory with `cd ${ZSH_CUSTOM1:-$ZSH/custom}/plugins`
+    2. Clone this repository with `git clone git@github.com:mrowa44/emojify.git`
+* [zgen](https://github.com/tarjoilija/zgen) users:
+    1. Add `zgen load mrowa44/emojify` where you're loading other plugins
+    2. Regenerate your init file with `zgen save`
 
 Usage
 -----
