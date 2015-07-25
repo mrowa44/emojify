@@ -20,7 +20,7 @@ added to your `$PATH`.
 
 Here's a one-liner:
 ```sh
-$ sudo sh -c "curl https://raw.githubusercontent.com/mrowa44/emojify/master/emojify -o /usr/local/bin/emojify && chmod +x /usr/local/bin/emojify"
+$ sudo sh -c "curl http://git.io/emojify -o /usr/local/bin/emojify && chmod +x /usr/local/bin/emojify"
 ```
 
 
