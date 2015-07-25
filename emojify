@@ -948,7 +948,7 @@ help () {
   cat <<EOF
   emojify - emoji on the command line 😱
 
-  USAGE: emojify [-h|--help] TEXT
+  USAGE: emojify [-h|--help][-l|--list] TEXT
 EOF
 }
 
@@ -956,6 +956,11 @@ EOF
 if test "$*" != ''; then
   if [ "$1" == '-h' ] || [ "$1" == '--help' ]; then
     help
+    exit 0
+  elif [ "$1" == '-l' ] || [ "$1" == '--list' ]; then
+    for (( x=0; x < ${#keys[@]}; x++ )); do
+       echo  "${values[$x]}      ${keys[$x]}"
+    done
     exit 0
   else
     IFS=' '; read -a words_arr <<< $*
