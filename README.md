@@ -23,6 +23,7 @@ Here's a one-liner:
 $ sudo sh -c "curl https://raw.githubusercontent.com/mrowa44/emojify/master/emojify -o /usr/local/bin/emojify && chmod +x /usr/local/bin/emojify"
 ```
 
+There is also a python port: [pyemojify](https://github.com/lord63/pyemojify), you can have a try :yum:
 
 Usage
 -----
