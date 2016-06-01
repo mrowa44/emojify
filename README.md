@@ -22,6 +22,10 @@ Here's a one-liner:
 ```sh
 $ sudo sh -c "curl https://raw.githubusercontent.com/mrowa44/emojify/master/emojify -o /usr/local/bin/emojify && chmod +x /usr/local/bin/emojify"
 ```
+If you're on OS X, emojify is also on [Homebrew](http://brew.sh/):
+```sh
+$ brew install emojify
+```
 
 There is also a python port: [pyemojify](https://github.com/lord63/pyemojify), you can have a try :yum:
 
