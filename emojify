@@ -948,23 +948,37 @@ help () {
   cat <<EOF
   emojify - emoji on the command line 😱
 
-  USAGE: emojify [-h|--help] TEXT
+  USAGE: emojify [-h|--help] [-l|--list] TEXT
 EOF
+  if [[ 'list' == $1 ]]; then
+    echo ''
+    echo 'Supported emojis:'
+    for key in ${!keys[@]}; do
+      echo " " ${values[$key]} " " ${keys[$key]}
+    done
+  fi
+  exit 0
 }
 
-# Accept input from $* or from the pipeline
-if test "$*" != ''; then
-  if [ "$1" == '-h' ] || [ "$1" == '--help' ]; then
-    help
-    exit 0
-  else
-    IFS=' '; read -a words_arr <<< $*
-    for word in "${words_arr[@]}"; do
-      data+=$(emojify $word)
-      data+=' '
-    done
-    echo $data
-  fi
+# If arguments are provided on the command line then check for supported help
+# options or process the arguments as emoji names.
+if [[ -n $1 ]]; then
+  case $1 in
+    '-h' | '--help' )
+      help
+      ;;
+
+    '-l' | '--list' )
+      help list
+      ;;
+
+    * )
+      IFS=' '; read -a words_arr <<< $*
+      for word in "${words_arr[@]}"; do
+        echo -n "$(emojify $word) "
+      done
+      ;;
+  esac
 else
   while IFS=''; read -r line || [ -n "$line" ]; do
     echo $(emojify $line)
