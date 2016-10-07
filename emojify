@@ -65,7 +65,7 @@ emojify () {
     local emojified=$line
   fi
 
-  echo $emojified | tr -d '\b'
+  echo $emojified | LC_CTYPE=C tr -d '\b'
 }
 
 # Emoji in something like a hash or associative array
