@@ -47,7 +47,7 @@ to_emoji () {
 # Returns emojified line
 emojify () {
   local line=$1
-  local emojified=$'\b'
+  local emojified
 
   if [[ $line =~ $regex ]]; then
     IFS=' ' read -a line_arr <<< $line
@@ -65,7 +65,7 @@ emojify () {
     local emojified=$line
   fi
 
-  echo -e $emojified | tr -d '\b'
+  echo -e $emojified
 }
 
 # Emoji in something like a hash or associative array
@@ -1921,6 +1921,7 @@ if [[ -n $1 ]]; then
       for word in "${words_arr[@]}"; do
         echo -n "$(emojify $word) "
       done
+      echo ''
       ;;
   esac
 else
