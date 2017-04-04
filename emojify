@@ -65,7 +65,7 @@ emojify () {
     local emojified=$line
   fi
 
-  printf $emojified | tr -d '\b'
+  echo -e $emojified | tr -d '\b'
 }
 
 # Emoji in something like a hash or associative array
@@ -1898,8 +1898,7 @@ EOF
     echo ''
     echo 'Supported emojis:'
     for key in ${!keys[@]}; do
-      printf ${values[$key]}
-      echo ' ' ${keys[$key]}
+      echo -e ${values[$key]} ' ' ${keys[$key]}
     done
   fi
   exit 0
