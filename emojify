@@ -65,7 +65,7 @@ emojify () {
     local emojified=$line
   fi
 
-  perl -CO -pE 's/\\u(\p{Hex}+)/chr(hex($1))/xieg' <<< "$emojified"
+ perl -CO -pE 's/\\u(\p{Hex}+)/chr(hex($1))/xieg' <<< "$emojified"
 }
 
 # Emoji in something like a hash or associative array
@@ -1904,6 +1904,16 @@ EOF
   exit 0
 }
 
+# Function to parse a line, split it into an array of words and then emojify
+# each word.
+parse_line () {
+  IFS=' '; read -a words_arr <<< $*
+  for word in "${words_arr[@]}"; do
+    echo -n "$(emojify $word) "
+  done
+  echo ''
+}
+
 # If arguments are provided on the command line then check for supported help
 # options or process the arguments as emoji names.
 if [[ -n $1 ]]; then
@@ -1917,15 +1927,11 @@ if [[ -n $1 ]]; then
       ;;
 
     * )
-      IFS=' '; read -a words_arr <<< $*
-      for word in "${words_arr[@]}"; do
-        echo -n "$(emojify $word) "
-      done
-      echo ''
+      parse_line $*
       ;;
   esac
 else
   while IFS=''; read -r line || [ -n "$line" ]; do
-    echo $(emojify $line)
+    parse_line $line
   done
 fi
