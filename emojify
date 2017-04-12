@@ -1867,7 +1867,7 @@ EOF
     if [[ 'list' == $1 ]]; then
         echo 'Supported emojis:'
         for key in ${!emojis[@]}; do
-            echo "$key ${emojis[$key]}"
+            echo -e "$key ${emojis[$key]}"
         done
     fi
     exit 0
@@ -1878,8 +1878,8 @@ check_version () {
     if (( ${BASH_VERSION%%.*} >= 4 )); then
         return
     else
-        echo "Oh my! That’s a very old version of bash you’re using, we don’t support that anymore :(" \
-        "Consider upgrading it or, if you must use bash ${BASH_VERSION} download an old version of" \
+        echo -e "Oh my! That’s a very old version of bash you’re using, we don’t support that anymore :(\n" \
+        "\nConsider upgrading it or, if you must use bash ${BASH_VERSION} download an old version of" \
         "emojify from here: https://github.com/mrowa44/emojify/blob/old_bash_support/emojify"
         exit 0
     fi
