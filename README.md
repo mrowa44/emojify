@@ -27,8 +27,6 @@ If you're on OS X, emojify is also on [Homebrew](http://brew.sh/):
 $ brew install emojify
 ```
 
-There is also a python port: [pyemojify](https://github.com/lord63/pyemojify), you can have a try :yum:
-
 Usage
 -----
 
@@ -50,7 +48,7 @@ $ emojify "To :bee: , or not to :bee: : that is the question... To take :muscle:
 
 Or you could run it through git log with something like:
 ```sh
-$ git log --oneline --color | emojify | less
+$ git log --oneline --color | emojify | less -r
 ```
 and go from this dull thing:
 
@@ -62,13 +60,20 @@ to this:
 
 To have an alias that does that for you, add something like:
 ```
-log = ! git log --oneline --color | emojify | less
+log = ! git log --oneline --color | emojify | less -r
 ```
 to your `.gitconfig`.
 
 Note: if you want colors you need to specify the `--color` option.
 
 To invoke help run `emojify -h`.
+
+
+Related
+-------
+
+* [pyemojify](https://github.com/lord63/pyemojify) - python port
+
 
 License
 -------
