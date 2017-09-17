@@ -1849,7 +1849,7 @@ to_emoji () {
 # Function to parse a line, split it into an array of words and then emojify
 # each word.
 parse_line () {
-    IFS=' '; read -ra words_arr <<< $*
+    IFS=' '; read -ra words_arr <<< "$*"
     out=()
     for word in "${words_arr[@]}"; do
         out+=("$(to_emoji "$word")")
@@ -1899,12 +1899,12 @@ if [[ -n $1 ]]; then
 
     * )
         check_version
-        parse_line $*
+        parse_line "$*"
         ;;
     esac
 else
     check_version
     while IFS=''; read -r line || [ -n "$line" ]; do
-        parse_line $line
+        parse_line "$line"
     done
 fi
