@@ -41,10 +41,10 @@ would output:
 
 Or maybe:
 ```sh
-$ emojify "To :bee: , or not to :bee: : that is the question... To take :muscle: against a :ocean: of troubles, and by opposing, end them?"
+$ emojify "To :bee: , or not to :bee: : that is the question... To take :muscle: against an :ocean: of troubles, and by opposing, end them?"
 ```
 > To :bee: , or not to :bee: : that is the question... To take :muscle: against
-> a :ocean: of troubles, and by opposing, end them?
+> an :ocean: of troubles, and by opposing, end them?
 
 Or you could run it through git log with something like:
 ```sh
