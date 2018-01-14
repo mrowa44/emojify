@@ -26,6 +26,10 @@ If you're on OS X, emojify is also on [Homebrew](http://brew.sh/):
 ```sh
 $ brew install emojify
 ```
+For Arch Linux users, a PKGBUILD is available in the [AUR](https://aur.archlinux.org/packages/emojify/):
+```sh
+$ pacaur -S emojify
+```
 
 Usage
 -----
