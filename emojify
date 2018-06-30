@@ -1860,9 +1860,13 @@ parse_line () {
 # Function to print help info.
 help () {
     cat <<EOF
-    emojify - emoji on the command line 😱
+emojify - emoji on the command line 😱
 
-    USAGE: emojify [-h|--help] [-l|--list] TEXT
+USAGE:
+    emojify TEXT
+    emojify -f|--process-file [FILE [FILE]...]
+    emojify -l|--list
+    emojify -h|--help
 EOF
     if [[ 'list' == $1 ]]; then
         echo 'Supported emojis:'
@@ -1889,6 +1893,11 @@ parse_files () {
     check_version
     local file
     for file in "$@"; do
+        if [ ! -e "$file" ]; then
+            echo "$file does not exist, just skipped!" 1>&2
+            continue
+        fi
+
         while IFS='' read -r line || [ -n "$line" ]; do
             parse_line "$line"
         done < "$file"
@@ -1896,6 +1905,7 @@ parse_files () {
 }
 
 declare -a args=()
+declare is_process_file=false
 # check for supported options(like help, list etc.)
 while (( $# > 0 )); do
     case "$1" in
@@ -1905,6 +1915,11 @@ while (( $# > 0 )); do
 
     '-l' | '--list' )
         help list
+        ;;
+
+    '-f' | '--process-file' )
+        is_process_file=true
+        shift
         ;;
 
     --)
@@ -1931,6 +1946,10 @@ done
 if (( "${#args[@]}" == 0 )); then
     parse_files /dev/stdin
 elif (( "${#args[@]}" > 0 )); then
-    check_version
-    parse_line "${args[*]}"
+    if $is_process_file; then
+        parse_files "${args[@]}"
+    else
+        check_version
+        parse_line "${args[*]}"
+    fi
 fi
