@@ -1895,10 +1895,10 @@ parse_files () {
     done
 }
 
-# If arguments are provided on the command line then check for supported help
-# options or process the arguments as emoji names.
-if [[ -n $1 ]]; then
-    case $1 in
+declare -a args=()
+# check for supported options(like help, list etc.)
+while (( $# > 0 )); do
+    case "$1" in
     '-h' | '--help' )
         help
         ;;
@@ -1907,11 +1907,30 @@ if [[ -n $1 ]]; then
         help list
         ;;
 
-    * )
-        check_version
-        parse_line "$*"
+    --)
+        shift
+        args=("${args[@]}" "$@")
+        break
+        ;;
+
+    -*)
+        echo "unrecognized option '$1'" 2>&1
+        exit 1
+        ;;
+
+    *)
+        args=("${args[@]}" "$1")
+        shift
         ;;
     esac
-else
+done
+
+
+# If no argments read from stdin,
+# or process the arguments as emoji names.
+if (( "${#args[@]}" == 0 )); then
     parse_files /dev/stdin
+elif (( "${#args[@]}" > 0 )); then
+    check_version
+    parse_line "${args[*]}"
 fi
