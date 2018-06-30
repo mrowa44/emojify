@@ -1864,7 +1864,7 @@ emojify - emoji on the command line 😱
 
 USAGE:
     emojify TEXT
-    emojify -f|--process-file [FILE [FILE]...]
+    emojify -f|--process-file [-i|--in-place] [FILE [FILE]...]
     emojify -l|--list
     emojify -h|--help
 EOF
@@ -1891,6 +1891,8 @@ check_version () {
 
 parse_files () {
     check_version
+
+    local -a tmp_file_prefix="/tmp/$(date +%s)_${RANDOM}_$$_"
     local file
     for file in "$@"; do
         if [ ! -e "$file" ]; then
@@ -1898,14 +1900,27 @@ parse_files () {
             continue
         fi
 
+        local in_place_tmp_file="${tmp_file_prefix}${file}"
+
         while IFS='' read -r line || [ -n "$line" ]; do
-            parse_line "$line"
+            if $is_in_place; then
+                parse_line "$line" >> "$in_place_tmp_file"
+            else
+                parse_line "$line"
+            fi
         done < "$file"
+
+        if $is_in_place; then
+            cat "$in_place_tmp_file" > "$file"
+        fi
     done
+
+    rm "$tmp_file_prefix"* &> /dev/null
 }
 
 declare -a args=()
 declare is_process_file=false
+declare is_in_place=false
 # check for supported options(like help, list etc.)
 while (( $# > 0 )); do
     case "$1" in
@@ -1919,6 +1934,11 @@ while (( $# > 0 )); do
 
     '-f' | '--process-file' )
         is_process_file=true
+        shift
+        ;;
+
+    '-i' | '--in-place' )
+        is_in_place=true
         shift
         ;;
 
