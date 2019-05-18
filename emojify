@@ -2791,21 +2791,30 @@ declare -A emojis=(
 )
 
 # Gets emoji from the associative array
-# Returns raw emoji character or word
+# echoes raw emoji character or the original token
 to_emoji () {
     local value=${emojis[$1]}
-    [[ -n $value ]] && echo -e "$value " || echo "$1"
+    [[ -n $value ]] && echo -e "$value" || echo "$1"
 }
 
-# Function to parse a line, split it into an array of words and then emojify
-# each word.
+# Function to parse a line, split it into tokens and then emojify
+# each token.
 parse_line () {
-    IFS=' '; read -ra words_arr <<< "$*"
+    if [ "$(uname)" == "Darwin" ]; then
+        tokens=$(perl -pe 's/:([a-zA-Z0-9_+-]+):/\n:\1:\n/g' <<< "$*")
+    elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+        tokens=$(sed -r 's/:([a-zA-Z0-9_+-]+):/\n:\1:\n/g' <<< "$*")
+    else
+        echo "emojify only supports OS X and Linux 😿" >&2
+        exit 0
+    fi
+
+    IFS=$'\n'; read -r -a tokens_arr -d '' <<< "$tokens"
     out=()
-    for word in "${words_arr[@]}"; do
-        out+=("$(to_emoji "$word")")
+    for token in "${tokens_arr[@]}"; do
+        out+=("$(to_emoji "$token")")
     done
-    echo "${out[*]}"
+    IFS=''; echo "${out[*]}"
 }
 
 # Function to print help info.
