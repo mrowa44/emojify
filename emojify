@@ -2811,9 +2811,13 @@ parse_line () {
 # Function to print help info.
 help () {
     cat <<EOF
-    emojify - emoji on the command line 😱
+emojify - emoji on the command line 😱
 
-    USAGE: emojify [-h|--help] [-l|--list] TEXT
+USAGE:
+    emojify TEXT
+    emojify -f|--process-file [-i|--in-place] [FILE [FILE]...]
+    emojify -l|--list
+    emojify -h|--help
 EOF
     if [[ 'list' == $1 ]]; then
         echo 'Supported emojis:'
@@ -2836,10 +2840,41 @@ check_version () {
     fi
 }
 
-# If arguments are provided on the command line then check for supported help
-# options or process the arguments as emoji names.
-if [[ -n $1 ]]; then
-    case $1 in
+parse_files () {
+    check_version
+
+    local -a tmp_file_prefix="/tmp/$(date +%s)_${RANDOM}_$$_"
+    local file
+    for file in "$@"; do
+        if [ ! -e "$file" ]; then
+            echo "$file does not exist, just skipped!" 1>&2
+            continue
+        fi
+
+        local in_place_tmp_file="${tmp_file_prefix}${file}"
+
+        while IFS='' read -r line || [ -n "$line" ]; do
+            if $is_in_place; then
+                parse_line "$line" >> "$in_place_tmp_file"
+            else
+                parse_line "$line"
+            fi
+        done < "$file"
+
+        if $is_in_place; then
+            cat "$in_place_tmp_file" > "$file"
+        fi
+    done
+
+    rm "$tmp_file_prefix"* &> /dev/null
+}
+
+declare -a args=()
+declare is_process_file=false
+declare is_in_place=false
+# check for supported options(like help, list etc.)
+while (( $# > 0 )); do
+    case "$1" in
     '-h' | '--help' )
         help
         ;;
@@ -2848,14 +2883,44 @@ if [[ -n $1 ]]; then
         help list
         ;;
 
-    * )
-        check_version
-        parse_line "$*"
+    '-f' | '--process-file' )
+        is_process_file=true
+        shift
+        ;;
+
+    '-i' | '--in-place' )
+        is_in_place=true
+        shift
+        ;;
+
+    --)
+        shift
+        args=("${args[@]}" "$@")
+        break
+        ;;
+
+    -*)
+        echo "unrecognized option '$1'" 2>&1
+        exit 1
+        ;;
+
+    *)
+        args=("${args[@]}" "$1")
+        shift
         ;;
     esac
-else
-    check_version
-    while IFS=''; read -r line || [ -n "$line" ]; do
-        parse_line "$line"
-    done
+done
+
+
+# If no argments read from stdin,
+# or process the arguments as emoji names.
+if (( "${#args[@]}" == 0 )); then
+    parse_files /dev/stdin
+elif (( "${#args[@]}" > 0 )); then
+    if $is_process_file; then
+        parse_files "${args[@]}"
+    else
+        check_version
+        parse_line "${args[*]}"
+    fi
 fi
