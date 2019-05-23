@@ -2791,30 +2791,55 @@ declare -A emojis=(
 )
 
 # Gets emoji from the associative array
-# echoes raw emoji character or the original token
-to_emoji () {
+# Returns raw emoji character or original token
+emojify_token () {
     local value=${emojis[$1]}
     [[ -n $value ]] && echo -e "$value" || echo "$1"
 }
 
-# Function to parse a line, split it into tokens and then emojify
-# each token.
-parse_line () {
-    if [ "$(uname)" == "Darwin" ]; then
-        tokens=$(perl -pe 's/:([a-zA-Z0-9_+-]+):/\n:\1:\n/g' <<< "$*")
-    elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-        tokens=$(sed -r 's/:([a-zA-Z0-9_+-]+):/\n:\1:\n/g' <<< "$*")
-    else
-        echo "emojify only supports OS X and Linux 😿" >&2
-        exit 0
-    fi
+# Function to emojify a line.
+emojify_line () {
+    line=$*
+    current_token=""
+    emojified_line=""
+    for (( i=0; i<${#line}; i++ )); do
+        current_char="${line:$i:1}"
 
-    IFS=$'\n'; read -r -a tokens_arr -d '' <<< "$tokens"
-    out=()
-    for token in "${tokens_arr[@]}"; do
-        out+=("$(to_emoji "$token")")
+        if [[ -z "$current_token" ]]; then
+            # starting a new token.
+            if [[ $current_char =~ ^:$ ]]; then
+                current_token+=$current_char
+            # not starting a new token.
+            else
+                emojified_line+=$current_char
+            fi
+        else
+            # finishing the current token.
+            if [[ $current_char =~ ^:$ ]]; then
+                emojified_token=$(emojify_token "$current_token$current_char")
+
+                # nothing changed. we still need the ending ':' as it might
+                # serve for an upcoming emoji 😁😁🎉🎉
+                if [[ "$emojified_token" == "$current_token$current_char" ]]; then
+                    emojified_line+=$current_token
+                    current_token=$current_char
+                else
+                    emojified_line+=$emojified_token
+                    current_token=""
+                fi
+            # continuing the current token.
+            elif [[ $current_char =~ ^[a-zA-Z0-9_+-]$ ]]; then
+                current_token+=$current_char
+            # dropping the current token.
+            else
+                current_token+=$current_char
+                emojified_line+=$current_token
+                current_token=""
+            fi
+        fi
     done
-    IFS=''; echo "${out[*]}"
+    emojified_line+=$current_token
+    echo "$emojified_line"
 }
 
 # Function to print help info.
@@ -2859,12 +2884,12 @@ if [[ -n $1 ]]; then
 
     * )
         check_version
-        parse_line "$*"
+        emojify_line "$*"
         ;;
     esac
 else
     check_version
     while IFS=''; read -r line || [ -n "$line" ]; do
-        parse_line "$line"
+        emojify_line "$line"
     done
 fi

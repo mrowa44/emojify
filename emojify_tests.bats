@@ -25,6 +25,13 @@
   [ "$result" = "great 👍👍👎" ]
 }
 
+@test "handles right-hand side emojis 👉" {
+  result=$(./emojify ":not_an_emoji:point_right:")
+  [ "$result" = ":not_an_emoji👉" ]
+  result=$(./emojify "::::point_right:")
+  [ "$result" = ":::👉" ]
+}
+
 @test "handles punctuations just after aliases" {
   result=$(./emojify "Enter the :airplane:!")
   [ "$result" = "Enter the ✈️!" ]
