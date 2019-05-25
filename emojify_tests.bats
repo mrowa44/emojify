@@ -52,3 +52,8 @@
   result=$(./emojify "To :bee: , or not to :bee: : that is the question... To take :muscle: against a :ocean: of troubles, and by opposing, end them?")
   [ "$result" = "To 🐝 , or not to 🐝 : that is the question... To take 💪 against a 🌊 of troubles, and by opposing, end them?" ]
 }
+
+@test "handles the list option" {
+  result=$(./emojify --list | grep "2nd_place_medal")
+  [ "$result" == ":2nd_place_medal: 🥈" ]
+}

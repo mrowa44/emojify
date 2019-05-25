@@ -2849,9 +2849,9 @@ help () {
 
     USAGE: emojify [-h|--help] [-l|--list] TEXT
 EOF
-    if [[ 'list' == $1 ]]; then
+    if [[ 'list' == "$1" ]]; then
         echo 'Supported emojis:'
-        for key in ${!emojis[@]}; do
+        for key in "${!emojis[@]}"; do
             echo -e "$key ${emojis[$key]}"
         done
     fi
