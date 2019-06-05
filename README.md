@@ -72,12 +72,17 @@ Note: if you want colors you need to specify the `--color` option.
 
 To invoke help run `emojify -h`.
 
-Testing
--------
+Contributing
+------------
 
 The project can be tested using [bats](https://github.com/sstephenson/bats#installing-bats-from-source):
 ```bash
 $ bats emojify_tests.bats
+```
+
+[Shellcheck](https://www.shellcheck.net/) can be used for linting the shell script:
+```bash
+$ shellcheck --exclude=SC1117 emojify
 ```
 
 Related
