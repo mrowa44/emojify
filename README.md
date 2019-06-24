@@ -31,7 +31,7 @@ For Arch Linux users, a PKGBUILD is available in the [AUR](https://aur.archlinux
 $ pacaur -S emojify
 ```
 
-Since #18 emojify requires bash version above 4. The old version can still be
+Since https://github.com/mrowa44/emojify/pull/18/ emojify requires bash version above 4. The old version can still be
 found here: https://github.com/mrowa44/emojify/tree/old_bash_support but it's
 not recommended.
 
