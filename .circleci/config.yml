@@ -1,0 +1,15 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:9.9.0-stretch
+    working_directory: ~/app
+    parallelism: 1
+    steps:
+      - checkout:
+          path: ~/app
+      - run: sudo apt-get update && sudo apt-get install -y bash bats
+      - run:
+          name: Running tests
+          command: bats emojify_tests.bats
