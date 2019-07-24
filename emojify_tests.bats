@@ -37,6 +37,11 @@
   [ "$result" = "Enter the ✈️!" ]
 }
 
+@test "ignores existing unicode emoji characters" {
+  result=$(./emojify "🐛 leave the emojis alone!!")
+  [ "$result" = "🐛 leave the emojis alone!!" ]
+}
+
 @test "handles multiple spaces after an emoji" {
   result=$(./emojify ":sparkles:   Three spaces")
   [ "$result" = "✨   Three spaces" ]
