@@ -9,7 +9,10 @@ jobs:
     steps:
       - checkout:
           path: ~/app
-      - run: sudo apt-get update && sudo apt-get install -y bash bats
+      - run: sudo apt-get update && sudo apt-get install -y bash bats shellcheck
       - run:
           name: Running tests
           command: bats emojify_tests.bats
+      - run:
+          name: Running Shellcheck
+          command: shellcheck --exclude=SC1117 emojify
