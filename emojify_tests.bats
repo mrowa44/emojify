@@ -59,6 +59,15 @@
 }
 
 @test "handles the list option" {
-  result=$(./emojify --list | grep "2nd_place_medal")
-  [ "$result" == ":2nd_place_medal: 🥈" ]
+  emojis=$(./emojify -l | grep "2nd_place_medal")
+  [ "$emojis" == ":2nd_place_medal: 🥈" ]
+  emojis=$(./emojify --list | grep "2nd_place_medal")
+  [ "$emojis" == ":2nd_place_medal: 🥈" ]
+}
+
+@test "handles the version option" {
+  version=$(./emojify -v)
+  [[ "$version" =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]
+  version=$(./emojify --version)
+  [[ "$version" =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]
 }
