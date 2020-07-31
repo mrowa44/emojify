@@ -34,7 +34,7 @@
 
 @test "handles punctuations just after aliases" {
   result=$(./emojify "Enter the :airplane:!")
-  [ "$result" = "Enter the ✈️!" ]
+  [ "$result" = "Enter the ✈!" ]
 }
 
 @test "ignores existing unicode emoji characters" {
