@@ -93,6 +93,7 @@ Related
 -------
 
 * [pyemojify](https://github.com/lord63/pyemojify) - python port
+* [goemojify](https://github.com/kkh913/goemojify) - Go port
 
 
 License
